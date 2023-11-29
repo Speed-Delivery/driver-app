@@ -1,24 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext } from "react";
+import { UserContext } from "./components/context/UserContext";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
+import Login from "./components/login/Login";
+import Signup from "./components/signup/SignUp";
+import HomePage from "./components/home/HomePage";
+import NavBar from "./components/common/NavBar";
+import AllLockers from "./components/lockers/AllLockers";
+import AvailableParcels from "./components/parcel/AvailableParcels";
 
 function App() {
+  const { user, isAuthenticated, setIsAuthenticated } = useContext(UserContext);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/signin" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/all-lockers/:id" element={<AllLockers />} />
+        <Route path="/available-parcels" element={<AvailableParcels />} />
+      </Routes>
+    </Router>
   );
 }
 

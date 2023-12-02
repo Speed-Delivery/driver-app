@@ -23,7 +23,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/signin" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/all-lockers/:id" element={<AllLockers />} />
+        <Route path="/all-lockers/:lockerId" element={<AllLockers />} />
         <Route path="/available-parcels" element={<AvailableParcels />} />
       </Routes>
     </Router>

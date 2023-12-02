@@ -117,9 +117,6 @@
         "cabinetNumber": 3
       },
       {
-        
-      },
-      {
         "id": "ABC003",
         "sender": "Sender 3",
         "recipient": "Recipient 3",
@@ -141,7 +138,7 @@
         "id": "ABC005",
         "sender": "Sender 5",
         "recipient": "Recipient 5",
-        "status": "pending",
+        "status": "delivered",
         "city": "Turku",
         "lockerId": 4,
         "cabinetNumber": 7
@@ -195,7 +192,7 @@
         "id": "ABC011",
         "sender": "Sender 11",
         "recipient": "Recipient 11",
-        "status": "pending",
+        "status": "delivered",
         "city": "Jyväskylä",
         "lockerId": 5,
         "cabinetNumber": 13
@@ -231,7 +228,7 @@
         "id": "ABC015",
         "sender": "Sender 15",
         "recipient": "Recipient 15",
-        "status": "pending",
+        "status": "delivered",
         "city": "Turku",
         "lockerId": 4,
         "cabinetNumber": 2

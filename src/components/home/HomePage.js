@@ -17,7 +17,7 @@ const HomePage = () => {
     >
       <div className="text-center py-3">
         <span className="text-3xl text-white font-semibold">
-          Pick a any locker location from below
+          Pick any locker location from below
         </span>
       </div>
       <div className="container p-2 flex flex-col sm:flex-row sm:grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mx-auto items-center">

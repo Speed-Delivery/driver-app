@@ -5,9 +5,9 @@ import { useParams } from "react-router-dom";
 
 const AllLockers = () => {
   const { cities } = parcelData;
-  const { id } = useParams();
-  const pickedCity = cities[id -1];
-  console.log(pickedCity);
+  const { lockerId } = useParams();
+  const pickedCity = cities.find((city) => city.lockerId === lockerId);
+  //console.log(pickedCity);
   const cabinets = pickedCity.cabinets;
 
   return (

@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import parcelData from "../../dummy_data/parcelData.json";
 
 const AvailableParcels = () => {
+  const [deliveryStatus, setDeliveryStatus] = useState(""); 
   const { parcels } = parcelData;
+  const [availableParcels, setAvailableParcels] = useState(parcels);
 
-  const availableParcels = parcels;
+  const handleDeliveryButton = (id) => {
+    //console.log("Delivery button clicked for parcel id: ", id);
+    const updatedParcels = availableParcels.map((parcel) =>
+      parcel.id === id ? { ...parcel, status: "delivered" } : parcel
+    );
+    setAvailableParcels(updatedParcels);
+  };
 
   return (
     <div
@@ -14,33 +22,61 @@ const AvailableParcels = () => {
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
       }}
-      className=" min-h-screen w-full bg-blend-overlay bg-black/50 text-white"
+      className=" min-h-screen w-full bg-blend-overlay bg-black/50 "
     >
-      <h1 className="text-4xl font-bold text-center py-2">
-        Pending parcels ready to deliver
+      <h1 className="text-4xl font-bold text-center py-2 text-white">
+        Parcel Information
       </h1>
-      <div className="container p-2 flex flex-col sm:flex-row sm:grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mx-auto items-center">
-        {availableParcels.map((parcel, index) => {
-          return (
-            <div className="">
-              <div className="h-60  bg-gray-600  m-2 rounded-2xl shadow-2xl p-2 flex flex-col justify-center items-center">
-                <h1 className="text-xl font-semibold text-center">
-                  ID : {parcel.id}
-                </h1>
-                <h1 className="text-xl  text-center">
-                  Locker ID : {parcel.lockerId}
-                </h1>
-                <h1 className="text-xl  text-center">
-                  Cabinet No : {parcel.cabinetNumber}
-                </h1>
-                <h1 className="text-xl  text-center">
-                  Sender : {parcel.sender}
-                </h1>
-                <h1 className="text-xl  text-center">City : {parcel.city}</h1>
+      <div className="container p-4 grid md:grid-cols-2 gap-4 mx-auto items-center">
+        {availableParcels.map((parcel, index) => (
+          <div key={index} className="rounded-xl overflow-hidden shadow-lg">
+            <div className="bg-gray-200 p-4 grid grid-cols-2 gap-2">
+              <div>
+                <h1 className="text-lg font-semibold">Parcel ID</h1>
+                <p className="text-xl">{parcel.id}</p>
               </div>
+              <div>
+                <h1 className="text-lg font-semibold">Locker ID</h1>
+                <p className="text-xl">{parcel.lockerId}</p>
+              </div>
+              <div>
+                <h1 className="text-lg font-semibold">Cabinet No</h1>
+                <p className="text-xl">{parcel.cabinetNumber}</p>
+              </div>
+              <div>
+                <h1 className="text-lg font-semibold">Sender</h1>
+                <p className="text-xl">{parcel.sender}</p>
+              </div>
+              <div>
+                <h1 className="text-lg font-semibold">Receiver</h1>
+                <p className="text-xl">{parcel.recipient}</p>
+              </div>
+              <div>
+                <h1 className="text-lg font-semibold">City</h1>
+                <p className="text-xl">{parcel.city}</p>
+              </div>
+              <div>
+                <h1 className="text-lg font-semibold">Status</h1>
+                <p className="text-xl uppercase">{parcel.status}</p>
+              </div>
+              {parcel.status === "pending" ? (
+                <button
+                  onClick={() => handleDeliveryButton(parcel.id)}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded duration-300"
+                >
+                  Deliver
+                </button>
+              ) : (
+                <button
+                  disabled
+                  className="bg-gray-600 text-white font-bold py-2 px-4 rounded duration-300"
+                >
+                  Delivered
+                </button>
+              )}
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
     </div>
   );

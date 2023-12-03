@@ -12,19 +12,43 @@ import HomePage from "./components/home/HomePage";
 import NavBar from "./components/common/NavBar";
 import AllLockers from "./components/lockers/AllLockers";
 import AvailableParcels from "./components/parcel/AvailableParcels";
+import DriverProfile from "./components/profile/DriverProfile";
 
 function App() {
   const { user, isAuthenticated, setIsAuthenticated } = useContext(UserContext);
 
+  const handleSignOut = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem("driver");
+    localStorage.removeItem("isAuthenticated");
+  };
+
   return (
     <Router>
-      <NavBar />
+      <NavBar
+        user={user}
+        isAuthenticated={isAuthenticated}
+        onSignOut={handleSignOut}
+      />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/signin" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/all-lockers/:lockerId" element={<AllLockers />} />
-        <Route path="/available-parcels" element={<AvailableParcels />} />
+        <Route
+          path="/signin"
+          element={!isAuthenticated ? <Login /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/signup"
+          element={!isAuthenticated ? <Signup /> : <Navigate to="/" />}
+        />
+
+        <Route path="/all-lockers/:id" element={<AllLockers />} />
+
+        {isAuthenticated && (
+          <Route path="/available-parcels" element={<AvailableParcels />} />
+        )}
+        {isAuthenticated && (
+          <Route path="/profile" element={<DriverProfile />} />
+        )}
       </Routes>
     </Router>
   );

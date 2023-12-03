@@ -26,7 +26,7 @@ const Login = ({ onAuthenticated }) => {
       setError('');
       // Here we call the login API
       try {
-        const response = await fetch("http://localhost:5000/api/users/signin", {
+        const response = await fetch("http://localhost:5005/api/drivers/signin", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -38,7 +38,7 @@ const Login = ({ onAuthenticated }) => {
           const data = await response.json();
           setUser(data);
           setIsAuthenticated(true);
-          localStorage.setItem("user", JSON.stringify(data));
+          localStorage.setItem("driver", JSON.stringify(data));
           navigate('/'); // Redirect to home page or dashboard
         } else {
           setError('Login failed. Please check your username and password.');

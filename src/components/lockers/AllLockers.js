@@ -5,8 +5,8 @@ import { useParams } from "react-router-dom";
 
 const AllLockers = () => {
   const { cities } = parcelData;
-  const { lockerId } = useParams();
-  const pickedCity = cities.find((city) => city.lockerId === lockerId);
+  const { id } = useParams();
+  const pickedCity = cities.find((city) => city.lockerId === id);
   //console.log(pickedCity);
   const cabinets = pickedCity.cabinets;
 
@@ -21,7 +21,7 @@ const AllLockers = () => {
       className=" min-h-screen w-full bg-blend-overlay bg-black/50 text-white"
     >
       <h1 className="text-4xl font-bold text-center py-2">
-        All Lockers of Oulu
+        All Lockers of {pickedCity.name}
       </h1>
       <div className="container p-2 flex flex-col sm:flex-row sm:grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mx-auto items-center">
         {cabinets.map((locker, index) => {

@@ -4,11 +4,11 @@ export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const updateUser = (updatedUser) => {
     setUser(updatedUser);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
+    localStorage.setItem("driver", JSON.stringify(updatedUser));
   };
 
   return (

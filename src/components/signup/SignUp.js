@@ -4,7 +4,7 @@ import { UserContext } from "../context/UserContext";
 
 const Signup = () => {
   const { updateUser, setIsAuthenticated } = useContext(UserContext);
-  const [, setError] = useState(null); // State to hold error information
+  const [ error, setError] = useState(null); // State to hold error information
 
   const [formData, setFormData] = useState({
     username: "",
@@ -25,7 +25,7 @@ const Signup = () => {
   console.log("Before sending ", formData);
   const handleSignup = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/users", {
+      const response = await fetch("http://localhost:5005/api/drivers/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,15 +37,16 @@ const Signup = () => {
         const data = await response.json();
 
         // Log role and isAdmin for debugging
-        console.log("User", data.user);
+        console.log("Driver", data.user);
         // Update user state using updateUser from Context
         updateUser({ ...data.user });
         setIsAuthenticated(true);
         // Update local storage
-        localStorage.setItem("user", JSON.stringify({ ...data.user }));
+        localStorage.setItem("driver", JSON.stringify({ ...data.user }));
         localStorage.setItem("isAuthenticated", JSON.stringify(true));
       } else {
         const errorData = await response.json(); // Get error details from the response
+        setError(errorData.message);
         throw new Error(errorData.message || "Signup failed");
       }
     } catch (error) {
@@ -115,6 +116,8 @@ const Signup = () => {
             />
           </div>
 
+          {error && <p className="text-red-500 text-xs italic">{error}</p>}
+          
           <button
             type="submit"
             className="w-full bg-red-500 text-white p-3 rounded hover:bg-red-600"

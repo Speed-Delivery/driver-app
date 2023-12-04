@@ -1,10 +1,11 @@
 import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom"; // Import Link for navigation
+import { Link, useNavigate } from "react-router-dom"; // Import Link for navigation
 import { UserContext } from "../context/UserContext";
 
 const Signup = () => {
   const { updateUser, setIsAuthenticated } = useContext(UserContext);
-  const [ error, setError] = useState(null); // State to hold error information
+  const [error, setError] = useState(null); // State to hold error information
+  const navigate = useNavigate(); // Create a navigate function
 
   const [formData, setFormData] = useState({
     username: "",
@@ -37,16 +38,16 @@ const Signup = () => {
         const data = await response.json();
 
         // Log role and isAdmin for debugging
-        console.log("Driver", data.user);
+        console.log("Driver : ", data.user);
         // Update user state using updateUser from Context
         updateUser({ ...data.user });
         setIsAuthenticated(true);
         // Update local storage
         localStorage.setItem("driver", JSON.stringify({ ...data.user }));
         localStorage.setItem("isAuthenticated", JSON.stringify(true));
+        navigate("/signin"); // Redirect to home page or dashboard
       } else {
         const errorData = await response.json(); // Get error details from the response
-        setError(errorData.message);
         throw new Error(errorData.message || "Signup failed");
       }
     } catch (error) {
@@ -68,10 +69,7 @@ const Signup = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div
-        
-        className="relative flex flex-col m-6 space-y-8 bg-white shadow-2xl rounded-2xl md:flex-row md:space-y-0"
-      >
+      <div className="relative flex flex-col m-6 space-y-8 bg-white shadow-2xl rounded-2xl md:flex-row md:space-y-0">
         <form
           className="flex flex-col justify-center p-8 md:p-14"
           onSubmit={handleSubmit}
@@ -115,9 +113,7 @@ const Signup = () => {
               placeholder="Password"
             />
           </div>
-
           {error && <p className="text-red-500 text-xs italic">{error}</p>}
-          
           <button
             type="submit"
             className="w-full bg-red-500 text-white p-3 rounded hover:bg-red-600"

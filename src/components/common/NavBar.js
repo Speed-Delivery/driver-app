@@ -7,14 +7,13 @@ const Navbar = () => {
   const { user, isAuthenticated, setIsAuthenticated } = useContext(UserContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Check if the user is an admin
   const isAdmin = user && user.role === "admin";
   console.log("The user value is: ", user);
   console.log("isAdmin is: ", isAdmin);
 
   const handleSignOut = () => {
     setIsAuthenticated(false);
-    localStorage.removeItem("user");
+    localStorage.removeItem("driver");
     localStorage.removeItem("isAuthenticated");
     navigate("/signin");
   };
@@ -50,47 +49,13 @@ const Navbar = () => {
 
           {isAuthenticated ? (
             <>
-              {/* Authenticated user links */}
-
-              <Link
-                to="/available-parcels"
-                className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
-              >
-                Parcels
-              </Link>
-              {/* <Link
-                to="/free-parcel"
-                className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
-              >
-                Free Lockers
-              </Link>
-              <Link
-                to="/booked-parcel"
-                className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
-              >
-                Booked Lockers
-              </Link> */}
               <Link
                 to="/profile"
                 className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
               >
                 Profile
               </Link>
-              {/* <Link
-                to="/account-deletion"
-                className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
-              >
-                Account Deletion
-              </Link> */}
-              {/* Admin links only admins*/}
-              {isAdmin && (
-                <Link
-                  to="/admin-panel"
-                  className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
-                >
-                  Admin Panel
-                </Link>
-              )}
+
               <button
                 onClick={handleSignOut}
                 className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"

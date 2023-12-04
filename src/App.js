@@ -11,7 +11,6 @@ import Signup from "./components/signup/SignUp";
 import HomePage from "./components/home/HomePage";
 import NavBar from "./components/common/NavBar";
 import AllLockers from "./components/lockers/AllLockers";
-import AvailableParcels from "./components/parcel/AvailableParcels";
 import DriverProfile from "./components/profile/DriverProfile";
 
 function App() {
@@ -19,7 +18,7 @@ function App() {
 
   const handleSignOut = () => {
     setIsAuthenticated(false);
-    localStorage.removeItem("driver");
+    localStorage.removeItem("user");
     localStorage.removeItem("isAuthenticated");
   };
 
@@ -31,7 +30,8 @@ function App() {
         onSignOut={handleSignOut}
       />
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={!isAuthenticated ? <Login /> : <HomePage />} />
+        {isAuthenticated && <Route path="/home" element={<HomePage />} />}
         <Route
           path="/signin"
           element={!isAuthenticated ? <Login /> : <Navigate to="/" />}
@@ -40,11 +40,8 @@ function App() {
           path="/signup"
           element={!isAuthenticated ? <Signup /> : <Navigate to="/" />}
         />
-
-        <Route path="/all-lockers/:id" element={<AllLockers />} />
-
         {isAuthenticated && (
-          <Route path="/available-parcels" element={<AvailableParcels />} />
+          <Route path="/all-lockers/:city" element={<AllLockers />} />
         )}
         {isAuthenticated && (
           <Route path="/profile" element={<DriverProfile />} />

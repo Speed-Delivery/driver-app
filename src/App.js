@@ -12,6 +12,7 @@ import HomePage from "./components/home/HomePage";
 import NavBar from "./components/common/NavBar";
 import AllLockers from "./components/lockers/AllLockers";
 import DriverProfile from "./components/profile/DriverProfile";
+import TaskList from "./components/tasks/TaskList";
 
 function App() {
   const { user, isAuthenticated, setIsAuthenticated } = useContext(UserContext);
@@ -42,6 +43,9 @@ function App() {
         />
         {isAuthenticated && (
           <Route path="/all-lockers/:city" element={<AllLockers />} />
+        )}
+        {isAuthenticated && (
+          <Route path="/tasklist" element={<TaskList />} />
         )}
         {isAuthenticated && (
           <Route path="/profile" element={<DriverProfile />} />

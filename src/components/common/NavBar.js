@@ -1,22 +1,8 @@
-import React, { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { IoMenu } from "react-icons/io5";
-import { UserContext } from "../context/UserContext";
 const Navbar = () => {
-  const navigate = useNavigate();
-  const { user, isAuthenticated, setIsAuthenticated } = useContext(UserContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const isAdmin = user && user.role === "admin";
-  console.log("The user value is: ", user);
-  console.log("isAdmin is: ", isAdmin);
-
-  const handleSignOut = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem("driver");
-    localStorage.removeItem("isAuthenticated");
-    navigate("/signin");
-  };
 
   return (
     <nav className="flex items-center bg-gray-900 p-3 flex-wrap">
@@ -47,45 +33,12 @@ const Navbar = () => {
             Home
           </Link>
 
-          {isAuthenticated ? (
-            <>
-              <Link
-                to="/profile"
-                className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
-              >
-                Profile
-              </Link>
-              <Link
-                to="/tasklist"
-                className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
-              >
-                Task List
-              </Link>
-
-              <button
-                onClick={handleSignOut}
-                className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
-              >
-                Sign Out
-              </button>
-            </>
-          ) : (
-            <>
-              {/* Non-authenticated user links */}
-              <Link
-                to="/signin"
-                className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
-              >
-                Sign In
-              </Link>
-              <Link
-                to="/signup"
-                className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
-              >
-                Sign Up
-              </Link>
-            </>
-          )}
+          <Link
+            to="/tasklist"
+            className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
+          >
+            Task List
+          </Link>
         </div>
       </div>
     </nav>

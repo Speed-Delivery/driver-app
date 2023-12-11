@@ -4,7 +4,8 @@ const TaskList = () => {
   const [lockers, setLockers] = useState([]);
   const [parcels, setParcels] = useState([]);
   const [transactions, setTransactions] = useState([]);
-  const [selectedCity, setSelectedCity] = useState('');
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedCabinet, setSelectedCabinet] = useState("");
 
   useEffect(() => {
     fetchLockers();
@@ -60,42 +61,51 @@ const TaskList = () => {
   };
 
   const getParcelsForCity = () => {
-    if (!Array.isArray(lockers) || !Array.isArray(parcels) || !Array.isArray(transactions)) {
+    if (
+      !Array.isArray(lockers) ||
+      !Array.isArray(parcels) ||
+      !Array.isArray(transactions)
+    ) {
       return [];
     }
-  
+
     // Create a mapping of Cabinet IDs to Locker locations
     const lockerCabinetMapping = lockers.reduce((acc, locker) => {
-      locker.cabinets.forEach(cabinet => {
+      locker.cabinets.forEach((cabinet) => {
         acc[cabinet._id] = locker.location; // Use the correct property for cabinet ID
       });
       return acc;
     }, {});
-  
+
     // Create a mapping of Parcel IDs to their corresponding Locker location based on Transaction Cabinet ID
-    const transactionCabinetMapping = transactions.reduce((acc, transaction) => {
-      const lockerLocation = lockerCabinetMapping[transaction.CabinetId]; // Use the correct property for Cabinet ID
-      if (lockerLocation) {
-        acc[transaction.parcelId] = lockerLocation; // Use the correct property for parcel ID
-      }
-      return acc;
-    }, {});
-  
-    // Filter parcels based on the selected city
-    const filteredParcels = parcels.filter(parcel => 
-      transactionCabinetMapping[parcel._id] === selectedCity // Use the correct property for parcel ID
+    const transactionCabinetMapping = transactions.reduce(
+      (acc, transaction) => {
+        const lockerLocation = lockerCabinetMapping[transaction.CabinetId]; // Use the correct property for Cabinet ID
+        if (lockerLocation) {
+          acc[transaction.parcelId] = lockerLocation; // Use the correct property for parcel ID
+        }
+        return acc;
+      },
+      {}
     );
-  
+
+    // Filter parcels based on the selected city
+    const filteredParcels = parcels.filter(
+      (parcel) => transactionCabinetMapping[parcel._id] === selectedCity // Use the correct property for parcel ID
+    );
+
     return filteredParcels;
   };
-  
 
   const filteredParcels = getParcelsForCity();
 
   const updateTransactionStatus = async (parcelId, newStatus) => {
-    const transaction = transactions.find(t => t.parcelId === parcelId);
+    const transaction = transactions.find((t) => t.parcelId === parcelId);
     if (transaction) {
-      const response = await fetch(`http://localhost:5005/api/transactions/${transaction._id}/${newStatus}`, { method: 'POST' });
+      const response = await fetch(
+        `http://localhost:5005/api/transactions/${transaction._id}/${newStatus}`,
+        { method: "POST" }
+      );
       if (response.ok) {
         fetchTransactions(); // Refresh the transactions list
       } else {
@@ -104,19 +114,38 @@ const TaskList = () => {
     }
   };
 
+  const getLockerCabinetNumber = (parcelId) => {
+    // Find the transaction for the given parcel
+    const transaction = transactions.find((t) => t.parcelId === parcelId);
+    if (!transaction) return null;
+
+    // Find the locker that contains the cabinet used in the transaction
+    const locker = lockers.find((locker) =>
+      locker.cabinets.some((cabinet) => cabinet._id === transaction.CabinetId)
+    );
+    if (!locker) return null;
+
+    // Find the cabinet number in the locker
+    const cabinet = locker.cabinets.find(
+      (cabinet) => cabinet._id === transaction.CabinetId
+    );
+    console.log("cabinet obj", cabinet);
+    return cabinet ? cabinet.cabinetNumber : null;
+  };
+
   const markParcelAsPickedUp = async (parcelId) => {
-    await updateTransactionStatus(parcelId, 'pick-up');
+    await updateTransactionStatus(parcelId, "pick-up");
   };
 
   const markParcelAsDelivered = async (parcelId) => {
-    await updateTransactionStatus(parcelId, 'deliver');
+    await updateTransactionStatus(parcelId, "deliver");
   };
   return (
     <div className="container mx-auto p-4">
       <header className="text-center mb-8">
         <h1 className="text-3xl font-bold">Parcel Locker Management</h1>
       </header>
-  
+
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">Select a Locker</h2>
         <div className="flex flex-wrap gap-2 justify-center">
@@ -131,38 +160,57 @@ const TaskList = () => {
           ))}
         </div>
       </section>
-  
+
       <main>
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Parcels in {selectedCity}</h2>
+          <h2 className="text-2xl font-semibold mb-4">
+            Parcels in {selectedCity}
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredParcels.map((parcel) => {
               // Find the corresponding transaction for this parcel
-              const transaction = transactions.find((t) => t.parcelId === parcel._id);
-  
+              const transaction = transactions.find(
+                (t) => t.parcelId === parcel._id
+              );
+
               // Determine whether to render the "Mark as Delivered" or "Mark as Picked Up" button
-              const isTransit = transaction && transaction.parcelStatus === 'in transit';
-              const isAwaitingPickup = transaction && transaction.parcelStatus === 'awaiting pickup';
-  
+              const isTransit =
+                transaction && transaction.parcelStatus === "in transit";
+              const isAwaitingPickup =
+                transaction && transaction.parcelStatus === "awaiting pickup";
+
               // Hide the buttons if parcelStatus is neither "in transit" nor "awaiting pickup"
               if (!isTransit && !isAwaitingPickup) {
                 return null; // Return null to skip rendering
               }
-  
+              const cabinetobj = getLockerCabinetNumber(parcel._id);
+
               return (
-                <div key={parcel._id} className="p-4 border border-gray-200 rounded shadow">
+                <div
+                  key={parcel._id}
+                  className="p-4 border border-gray-200 rounded shadow"
+                >
                   <p className="font-bold">Parcel ID: {parcel._id.$oid}</p>
                   <p>Parcel Description: {parcel.parcelDescription}</p>
-                  <p>Weight: {parcel.parcelWeight && parcel.parcelWeight.$numberInt} kg</p>
                   <p>
-                    Dimensions (LxWxH):{' '}
+                    Weight:{" "}
+                    {parcel.parcelWeight && parcel.parcelWeight.$numberInt} kg
+                  </p>
+                  <p>
+                    Dimensions (LxWxH):{" "}
                     {parcel.parcelDimension &&
-                      `${parcel.parcelDimension.length.$numberInt}x${parcel.parcelDimension.width.$numberInt}x${parcel.parcelDimension.height.$numberInt}`}{' '}
+                      `${parcel.parcelDimension.length.$numberInt}x${parcel.parcelDimension.width.$numberInt}x${parcel.parcelDimension.height.$numberInt}`}{" "}
                     cm
                   </p>
+                  {/* get the cabinet number foromt he transaction */}
+                  <p>Cabinet Number: {cabinetobj}</p>
                   <p>Sender: {parcel.sender && parcel.sender.name}</p>
+                  <p>Address: {parcel.sender && parcel.sender.address}</p>
                   <p>Recipient: {parcel.recipient && parcel.recipient.name}</p>
-                  <p>Status: {transaction ? transaction.parcelStatus : 'Unknown'}</p>
+                  <p>Address: {parcel.recipient && parcel.recipient.address}</p>
+                  <p>
+                    Status: {transaction ? transaction.parcelStatus : "Unknown"}
+                  </p>
                   {isTransit && (
                     <button
                       className="mt-2 px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition-colors"
@@ -186,7 +234,7 @@ const TaskList = () => {
         </section>
       </main>
     </div>
-  );  
-};  
+  );
+};
 
 export default TaskList;

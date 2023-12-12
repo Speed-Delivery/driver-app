@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Import Link for navigation
 import { UserContext } from "../context/UserContext";
-
+import API_BASE_URL from '../../apiConfig';
 const Signup = () => {
   const { updateUser, setIsAuthenticated } = useContext(UserContext);
   const [error, setError] = useState(null); // State to hold error information
@@ -26,7 +26,7 @@ const Signup = () => {
   console.log("Before sending ", formData);
   const handleSignup = async () => {
     try {
-      const response = await fetch("http://localhost:5005/api/drivers/", {
+      const response = await fetch(`${API_BASE_URL}/api/drivers/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

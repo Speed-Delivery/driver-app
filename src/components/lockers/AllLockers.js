@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import API_BASE_URL from  "../../apiConfig";
 
 const AllLockers = () => {
   const { city } = useParams();
@@ -11,7 +12,7 @@ const AllLockers = () => {
   const getLockersByCity = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:5005/api/lockers/${city}`);
+      const response = await fetch(`${API_BASE_URL}/api/lockers/${city}`);
       if (response.ok) {
         const data = await response.json();
         const cab = data.lockers[0].cabinets;
@@ -31,7 +32,7 @@ const AllLockers = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:5005/api/lockers/${lid}/`,
+        `${API_BASE_URL}/api/lockers/${lid}/`,
         {
           method: "PUT",
           headers: {
@@ -62,7 +63,7 @@ const AllLockers = () => {
 
   const fetchTransactions = async () => {
     try {
-      const response = await fetch("http://localhost:5005/api/transactions");
+      const response = await fetch(`${API_BASE_URL}/api/transactions`);
       const data = await response.json();
       return data.transactions && Array.isArray(data.transactions)
         ? data.transactions
@@ -91,7 +92,7 @@ const AllLockers = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5005/api/transactions/${transactionId}`,
+        `${API_BASE_URL}/api/transactions/${transactionId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

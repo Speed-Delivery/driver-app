@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import API_BASE_URL from '../../apiConfig';
 const TaskList = () => {
   const [lockers, setLockers] = useState([]);
   const [parcels, setParcels] = useState([]);
@@ -15,7 +15,7 @@ const TaskList = () => {
 
   const fetchLockers = async () => {
     try {
-      const response = await fetch("http://localhost:5005/api/lockers");
+      const response = await fetch(`${API_BASE_URL}/api/lockers`);
       if (response.ok) {
         const data = await response.json();
         setLockers(data.lockers);
@@ -29,7 +29,7 @@ const TaskList = () => {
 
   const fetchParcels = async () => {
     try {
-      const response = await fetch("http://localhost:5005/api/parcels");
+      const response = await fetch(`${API_BASE_URL}/api/parcels`);
       if (response.ok) {
         const data = await response.json();
         setParcels(data.parcels);
@@ -43,7 +43,7 @@ const TaskList = () => {
 
   const fetchTransactions = async () => {
     try {
-      const response = await fetch("http://localhost:5005/api/transactions");
+      const response = await fetch(`${API_BASE_URL}/api/transactions`);
       if (response.ok) {
         const data = await response.json();
         setTransactions(data.transactions);
@@ -103,7 +103,7 @@ const TaskList = () => {
     const transaction = transactions.find((t) => t.parcelId === parcelId);
     if (transaction) {
       const response = await fetch(
-        `http://localhost:5005/api/transactions/${transaction._id}/${newStatus}`,
+        `${API_BASE_URL}/api/transactions/${transaction._id}/${newStatus}`,
         { method: "POST" }
       );
       if (response.ok) {

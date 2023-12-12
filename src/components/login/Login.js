@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
+import API_BASE_URL from '../../apiConfig';
 
 const Login = ({ onAuthenticated }) => {
   const [credentials, setCredentials] = useState({
@@ -27,7 +28,7 @@ const Login = ({ onAuthenticated }) => {
       // Here we call the login API
       try {
         const response = await fetch(
-          "http://localhost:5005/api/drivers/signin",
+          `${API_BASE_URL}/api/drivers/signin`,
           {
             method: "POST",
             headers: {
